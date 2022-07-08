@@ -1,10 +1,13 @@
 pipeline {
     agent any
+    tools {
+        maven 'maven'
+    }
     stages {
         stage ('Testing') {
             steps {
                 withMaven() {
-   sh "./mvnw clean deploy"
+   sh "./mvn clean Test"
 }
                 echo 'Testing.....'
             }
