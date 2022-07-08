@@ -1,14 +1,12 @@
 pipeline {
     agent any
     tools {
-        maven 'maven'
+        maven 'Apache Maven 3.8.6'
     }
     stages {
         stage ('Testing') {
             steps {
-                withMaven() {
-   sh 'mvn Test'
-}
+                sh 'mvn Test'
                 echo 'Testing.....'
             }
         }
