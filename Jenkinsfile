@@ -17,11 +17,21 @@ pipeline {
             }
         }
         stage ('deploy to dev') {
+            when {
+    expression {
+      env.BRANCH_NAME == 'develop'
+      }
+  }
             steps {
                 echo 'deploying to dev environment..'
             }
         }
         stage ('deploy to prod') {
+            when {
+    expression {
+      env.BRANCH_NAME == 'main'
+      }
+  }
             steps {
                 echo 'deploy to prod......'
             }
