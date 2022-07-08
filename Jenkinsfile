@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage ('Testing') {
             steps {
-                sh 'mvn Test'
+                withMaven() {
+   sh "./mvnw clean deploy"
+}
                 echo 'Testing.....'
             }
         }
