@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment{
-        VpcID = ""
+        VVpcID = ""
     }
     stages{
         stage ("Init"){
@@ -38,6 +38,7 @@ pipeline {
             steps{
                 sh '''
                    echo "v = ${VpcID}"
+                   echo "vV = ${VVpcID}"
                 '''
             }
         }
