@@ -11,12 +11,12 @@ pipeline {
         stage ("Init"){
             steps{
                 script{
-                    if ( ${Env} == "develop" ){
+                    if ( env.Env == "develop" ){
                         env.VpcID = "NA"
                         env.SubnetA = "NA"
                         env.SubnetB = "NA"
                     }
-                    else if ( ${Env} == "stage" ) {
+                    else if ( env.Env == "stage" ) {
                         env.VpcID = "vpc-02dac25a0dd4bff20"
                         env.SubnetA = "subnet-07b817119dc5d49f5"
                         env.SubnetB = "subnet-0d168bef0decca23b"
