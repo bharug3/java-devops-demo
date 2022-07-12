@@ -27,6 +27,7 @@ pipeline {
         stage ("CFN syntax check"){
             steps{
                 echo "Checking syntax check"
+                echo env.VpcID 
             }
         }
 
@@ -47,19 +48,3 @@ pipeline {
     }
 }
 
-export Namespace="reports"
-export Env="stage" 
-export VpcID="vpc-02dac25a0dd4bff20"
-export SubnetA="subnet-07b817119dc5d49f5"
-export SubnetB="subnet-0d168bef0decca23b"
-export ServiceName="lambdafunction1"
-
-aws cloudformation deploy  --region us-west-2 --stack-name "${Namespace}-${Env}-${ServiceName}" \
-                        --parameter-overrides Env=${Env} \
-                                     Namespace=${Namespace} \
-                                     VpcID=${VpcID} \
-                                     SubnetA=${SubnetA} \
-                                     SubnetB=${SubnetB} \
-                                     ServiceName=${ServiceName} \
-                        --s3-bucket "bhargavbucket123" \
-                        --template-file "lambdas/${Env}/${ServiceName}/cfn.yml"
