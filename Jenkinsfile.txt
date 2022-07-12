@@ -7,6 +7,9 @@ pipeline {
         choice(name: "Namespace", choices: ["reports"])
     }
 
+    environment{
+        VpcID = ""
+    }
     stages{
         stage ("Init"){
             steps{
@@ -34,14 +37,7 @@ pipeline {
         stage("CFN deploy"){
             steps{
                 sh '''
-                    aws cloudformation update-stack --stack-name "${Namespace}-${Env}-${ServiceName}" \
-                        --parameters ParameterKey=Env,ParameterValue=${Env} \
-                                     ParameterKey=Namespace,ParameterValue=${Namespace} \
-                                     ParameterKey=VpcID,ParameterValue=${VpcID} \
-                                     ParameterKey=SubnetA,ParameterValue=${SubnetA} \
-                                     ParameterKey=SubnetB,ParameterValue=${SubnetB} \
-                                     ParameterKey=ServiceName,ParameterValue=${ServiceName} \
-                        --template-body "lambda/${Env}/${ServiceName}/cfn.yml"
+                   echo "v = ${VpcID}"
                 '''
             }
         }
