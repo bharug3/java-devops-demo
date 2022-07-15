@@ -7,16 +7,19 @@ pipeline {
         choice(name: "Namespace", choices: ["reports"])
     }
 
+    environment{
+        VVpcID = ""
+    }
     stages{
         stage ("Init"){
             steps{
                 script{
-                    if ( ${Env} == "develop" ){
+                    if ( env.Env == "develop" ){
                         env.VpcID = "NA"
                         env.SubnetA = "NA"
                         env.SubnetB = "NA"
                     }
-                    else if ( ${Env} == "stage" ) {
+                    else if ( env.Env == "stage" ) {
                         env.VpcID = "vpc-02dac25a0dd4bff20"
                         env.SubnetA = "subnet-07b817119dc5d49f5"
                         env.SubnetB = "subnet-0d168bef0decca23b"
@@ -27,39 +30,18 @@ pipeline {
         stage ("CFN syntax check"){
             steps{
                 echo "Checking syntax check"
+                echo env.VpcID 
             }
         }
 
         stage("CFN deploy"){
             steps{
                 sh '''
-                    aws cloudformation update-stack --stack-name "${Namespace}-${Env}-${ServiceName}" \
-                        --parameters ParameterKey=Env,ParameterValue=${Env} \
-                                     ParameterKey=Namespace,ParameterValue=${Namespace} \
-                                     ParameterKey=VpcID,ParameterValue=${VpcID} \
-                                     ParameterKey=SubnetA,ParameterValue=${SubnetA} \
-                                     ParameterKey=SubnetB,ParameterValue=${SubnetB} \
-                                     ParameterKey=ServiceName,ParameterValue=${ServiceName} \
-                        --template-body "lambda/${Env}/${ServiceName}/cfn.yml"
+                   echo "v = ${VpcID}"
+                   echo "vV = ${VVpcID}"
                 '''
             }
         }
     }
 }
 
-export Namespace="reports"
-export Env="stage" 
-export VpcID="vpc-02dac25a0dd4bff20"
-export SubnetA="subnet-07b817119dc5d49f5"
-export SubnetB="subnet-0d168bef0decca23b"
-export ServiceName="lambdafunction1"
-
-aws cloudformation deploy  --region us-west-2 --stack-name "${Namespace}-${Env}-${ServiceName}" \
-                        --parameter-overrides Env=${Env} \
-                                     Namespace=${Namespace} \
-                                     VpcID=${VpcID} \
-                                     SubnetA=${SubnetA} \
-                                     SubnetB=${SubnetB} \
-                                     ServiceName=${ServiceName} \
-                        --s3-bucket "bhargavbucket123" \
-                        --template-file "lambdas/${Env}/${ServiceName}/cfn.yml"
